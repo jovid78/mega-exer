@@ -1,0 +1,48 @@
+---
+layout: runbook
+title: '#4471 · four problems, not one'
+owner: Jovi
+status: open
+reviewed: 2026-10-31
+signature: Jovi
+---
+
+<script>
+  import SplitTable from '#lib/kb/SplitTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+[#4471](/kb/incidents/4471) says its reports are one bug with one fix queued. Read by body, not by
+subject, they are four problems. Each now has a ticket of its own.
+
+<Callout kind="warn">
+The queued parser fix closes only the first row. The other reports keep coming after it ships.
+</Callout>
+
+## What #4471 holds
+
+<SplitTable ticket={4471} />
+
+## How to tell them apart
+
+- **Parser.** Day and month swapped, from a tenant that writes the day first, through the app,
+  email or a booking-v2 form.
+- **Hint.** Day and month swapped too, but only through the booking-v3 form, which tells people to
+  type the month first. Same symptom as the parser, different fix.
+- **One day.** The date moves by a single day, or differs between two time zones. Not a swap. The
+  desk already lists these in its notes.
+- **Unconfirmed.** A wrong date the body doesn't pin down. Kept apart so no other count grows.
+
+## How they were merged
+
+[Decision 0001](/kb/decisions/0001-dedupe-by-subject) merges on the subject line and nobody reads
+the body. These reports don't share one subject line. [Triage](/kb/triage/dedupe) says to merge when unsure. The intake tag is
+guessed from the reporter's browser, not the tenant.
+
+## Lessons
+
+- A big ticket can be several bugs with one symptom. Read the bodies before you call it known.
+- Count by cause, not by subject.
+
+<RenderStamp {signature} />
