@@ -1,22 +1,17 @@
 // How #4471 splits into the problems inside it. SplitTable runs this over the reports on every build.
 import { causeOf, uniqueById, type Report, type Tenant } from '#lib/kb/causes';
 
-export type Problem = 'parser' | 'hint' | 'one-day' | 'unconfirmed';
-
-// The cause rule in causes.ts can't see these: they come from reading the body. A one-day move is
-// not a day/month swap, so a parser fix won't touch it. The desk keeps that list (desk-notes.json).
-// Unconfirmed: a wrong date, but the body fits neither a swap nor a one-day move clearly.
-export const UNCONFIRMED: readonly string[] = ['R-41417', 'R-41514'];
+export type Problem = 'parser' | 'hint' | 'one-day';
 
 export const PROBLEMS: { problem: Problem; title: string; issue: string }[] = [
   { problem: 'parser', title: 'Shared parser reads day-first dates month first', issue: 'https://github.com/jovid78/mega-exer/issues/1' },
   { problem: 'hint', title: 'booking-v3 form hint says MM/DD/YYYY', issue: 'https://github.com/jovid78/mega-exer/issues/2' },
   { problem: 'one-day', title: 'Dates shift by one day, likely time zone', issue: 'https://github.com/jovid78/mega-exer/issues/3' },
-  { problem: 'unconfirmed', title: 'Wrong date, cause not confirmed', issue: 'https://github.com/jovid78/mega-exer/issues/4' },
 ];
 
+// The cause rule in causes.ts can't see a one-day move: it comes from reading the body. It is not a
+// day/month swap, so a parser fix won't touch it. The desk keeps that list (desk-notes.json).
 export function problemOf(r: Report, t: Tenant | undefined, oneDayMove: readonly string[]): Problem | null {
-  if (UNCONFIRMED.includes(r.id)) return 'unconfirmed';
   if (oneDayMove.includes(r.id)) return 'one-day';
   return causeOf(r, t);
 }

@@ -1,6 +1,6 @@
 ---
 layout: runbook
-title: '#4471 · four problems, not one'
+title: '#4471 · three problems, not one'
 owner: Jovi
 status: open
 reviewed: 2026-10-31
@@ -14,7 +14,7 @@ signature: Jovi
 </script>
 
 [#4471](/kb/incidents/4471) says its reports are one bug with one fix queued. Read by body, not by
-subject, they are four problems. Each now has a ticket of its own.
+subject, they are three problems. Each now has a ticket of its own.
 
 <Callout kind="warn">
 The queued parser fix closes only the first row. The other reports keep coming after it ships.
@@ -32,7 +32,6 @@ The queued parser fix closes only the first row. The other reports keep coming a
   type the month first. Same symptom as the parser, different fix.
 - **One day.** The date moves by a single day, or differs between two time zones. Not a swap. The
   desk already lists these in its notes.
-- **Unconfirmed.** A wrong date the body doesn't pin down. Kept apart so no other count grows.
 
 ## How they were merged
 
