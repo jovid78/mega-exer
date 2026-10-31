@@ -9,15 +9,24 @@ export const PROBLEMS: { problem: Problem; title: string; issue: string }[] = [
   { problem: 'one-day', title: 'Dates shift by one day, likely time zone', issue: 'https://github.com/jovid78/mega-exer/issues/3' },
 ];
 
-// The cause rule in causes.ts can't see a one-day move: it comes from reading the body. It is not a
-// day/month swap, so a parser fix won't touch it. The desk keeps that list (desk-notes.json).
-export function problemOf(r: Report, t: Tenant | undefined, oneDayMove: readonly string[]): Problem | null {
-  if (oneDayMove.includes(r.id)) return 'one-day';
-  return causeOf(r, t);
-}
+export type ProblemGroup = {
+  problem: Problem | 'unplaced';
+  reports: Report[];
+  // The cause these reports are counted under, when it isn't their own (one-day moves).
+  filedUnder: Problem | null;
+  tenants: number;
+  firstSeen: string;
+  lastSeen: string;
+};
 
-export type ProblemGroup = { problem: Problem | 'unplaced'; reports: Report[]; tenants: number; firstSeen: string; lastSeen: string };
+const group = (problem: ProblemGroup['problem'], rs: Report[], filedUnder: Problem | null = null): ProblemGroup => {
+  const days = rs.map((r) => r.receivedAt.slice(0, 10)).sort();
+  return { problem, reports: rs, filedUnder, tenants: new Set(rs.map((r) => r.tenant)).size, firstSeen: days[0], lastSeen: days[days.length - 1] };
+};
 
+// Counted the desk's way: every report under its cause (causes.ts). The cause rule can't see a
+// one-day move; the desk lists those in desk-notes.json and keeps them counted where they're filed.
+// So the one-day row is a part of another row, not added to the total.
 export function splitTicket(
   reports: Report[],
   ticket: number,
@@ -25,12 +34,11 @@ export function splitTicket(
   oneDayMove: readonly string[],
 ): ProblemGroup[] {
   const merged = uniqueById(reports).filter((r) => r.mergedInto === ticket);
-  const order: ProblemGroup['problem'][] = [...PROBLEMS.map((p) => p.problem), 'unplaced'];
-  return order
-    .map((problem) => {
-      const rs = merged.filter((r) => (problemOf(r, tenantOf(r), oneDayMove) ?? 'unplaced') === problem);
-      const days = rs.map((r) => r.receivedAt.slice(0, 10)).sort();
-      return { problem, reports: rs, tenants: new Set(rs.map((r) => r.tenant)).size, firstSeen: days[0], lastSeen: days[days.length - 1] };
-    })
-    .filter((g) => g.reports.length > 0);
+  const causeGroups = (['parser', 'hint', 'unplaced'] as const).map((c) =>
+    group(c, merged.filter((r) => (causeOf(r, tenantOf(r)) ?? 'unplaced') === c)),
+  );
+  const moved = merged.filter((r) => oneDayMove.includes(r.id));
+  const filedAs = [...new Set(moved.map((r) => causeOf(r, tenantOf(r))))];
+  const filed = filedAs.length === 1 ? filedAs[0] : null;
+  return [...causeGroups, group('one-day', moved, filed)].filter((g) => g.reports.length > 0);
 }

@@ -17,7 +17,7 @@ signature: Jovi
 subject, they are three problems. Each now has a ticket of its own.
 
 <Callout kind="warn">
-The queued parser fix closes only the first row. The other reports keep coming after it ships.
+The queued parser fix doesn't touch the hint or the one-day reports. They keep coming after it ships.
 </Callout>
 
 ## What #4471 holds
@@ -31,7 +31,7 @@ The queued parser fix closes only the first row. The other reports keep coming a
 - **Hint.** Day and month swapped too, but only through the booking-v3 form, which tells people to
   type the month first. Same symptom as the parser, different fix.
 - **One day.** The date moves by a single day, or differs between two time zones. Not a swap. The
-  desk already lists these in its notes.
+  desk already lists these in its notes and counts them under the parser, by tenant.
 
 ## How they were merged
 
