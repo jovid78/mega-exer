@@ -3,10 +3,11 @@ import { causeOf, uniqueById, type Report, type Tenant } from '#lib/kb/causes';
 
 export type Problem = 'parser' | 'hint' | 'one-day';
 
-export const PROBLEMS: { problem: Problem; title: string; issue: string }[] = [
-  { problem: 'parser', title: 'Shared parser reads day-first dates month first', issue: 'https://github.com/jovid78/mega-exer/issues/1' },
-  { problem: 'hint', title: 'booking-v3 form hint says MM/DD/YYYY', issue: 'https://github.com/jovid78/mega-exer/issues/2' },
-  { problem: 'one-day', title: 'Dates shift by one day, likely time zone', issue: 'https://github.com/jovid78/mega-exer/issues/3' },
+// Status as engineering reported it when #4471 closed on 5 October.
+export const PROBLEMS: { problem: Problem; title: string; issue: string; status: string }[] = [
+  { problem: 'parser', title: 'Shared parser reads day-first dates month first', issue: 'https://github.com/jovid78/mega-exer/issues/1', status: 'fixed' },
+  { problem: 'hint', title: 'booking-v3 form hint says MM/DD/YYYY', issue: 'https://github.com/jovid78/mega-exer/issues/2', status: "won't fix" },
+  { problem: 'one-day', title: 'Dates shift by one day, likely time zone', issue: 'https://github.com/jovid78/mega-exer/issues/3', status: 'open' },
 ];
 
 export type ProblemGroup = {

@@ -20,7 +20,7 @@
 
 <table>
   <thead>
-    <tr><th>problem</th><th>reports</th><th>tenants</th><th>seen</th><th>ticket</th></tr>
+    <tr><th>problem</th><th>reports</th><th>tenants</th><th>seen</th><th>status</th><th>ticket</th></tr>
   </thead>
   <tbody>
     {#each groups as g (g.problem)}
@@ -30,6 +30,7 @@
         <td>{g.reports.length}{#if g.filedUnder}<span class="in"> (in {g.filedUnder})</span>{/if}</td>
         <td>{g.tenants}</td>
         <td>{g.firstSeen} → {g.lastSeen}</td>
+        <td class:open={p?.status === 'open'}>{p?.status ?? ''}</td>
         <td>{#if p}<a href={p.issue}>{p.issue.split('/').slice(-3).join('/').replace('/issues/', '#')}</a>{:else}none{/if}</td>
       </tr>
     {/each}
@@ -46,5 +47,6 @@
   .sum { font-size: 1.1rem; }
   .in, .note { color: var(--muted); font-size: 0.85em; }
   .part td:first-child { padding-left: 1.5rem; }
+  .open { color: var(--warn); font-weight: 600; }
   .wrong td { background: var(--warn-bg); }
 </style>

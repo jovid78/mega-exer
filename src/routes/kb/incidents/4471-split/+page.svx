@@ -16,8 +16,11 @@ signature: Jovi
 [#4471](/kb/incidents/4471) says its reports are one bug with one fix queued. Read by body, not by
 subject, they are three problems. Each now has a ticket of its own.
 
+#4471 closed on 5 October. Engineering fixed the parser (`fix(dates): parse dd/mm for eu locales`)
+and won't fix the hint: the booking-v3 form is retired.
+
 <Callout kind="warn">
-The queued parser fix doesn't touch the hint or the one-day reports. They keep coming after it ships.
+The one-day reports are still open. Neither the parser fix nor retiring the form touches them.
 </Callout>
 
 ## What #4471 holds
